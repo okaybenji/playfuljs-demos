@@ -3,15 +3,17 @@
     <title>Particles Demo - PlayfulJS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   </head>
-  <body style='background: #000'>
+  <body style='background: #eee'>
     <canvas id='display' width='1' height='1' />
 
     <script>
       var time = 1;
-      var DAMPING = 0.999;
+      //var DAMPING = 0.999;
+      var DAMPING = 0.9999;
       function Particle(x, y) {
         this.x = this.oldX = x;
         this.y = this.oldY = y;
+        this.color = '#'+Math.floor(Math.random()*16777215).toString(16);
       }
       Particle.prototype.integrate = function() {
         var velocityX = (this.x - this.oldX) * DAMPING;
@@ -30,8 +32,9 @@
       };
       Particle.prototype.draw = function() {
         //ctx.strokeStyle = '#ffffff';
-        ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
-        ctx.lineWidth = 2;
+        //ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 99;
         ctx.beginPath();
         ctx.moveTo(this.oldX, this.oldY);
         ctx.lineTo(this.x, this.y);
@@ -46,17 +49,17 @@
       for (var i = 0; i < 5000; i++) {
         particles[i] = new Particle(Math.random() * width, Math.random() * height);
       }
-      /*display.addEventListener('mousemove', onMousemove);
-      function onMousemove(e) {
+      display.addEventListener('mousemove', trackMouse);
+      function trackMouse(e) {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
-      }*/
+      }
       requestAnimationFrame(frame);
       function frame() {
         requestAnimationFrame(frame);
         ctx.clearRect(0, 0, width, height);
         time++;
-        DAMPING = DAMPING * (1 + time/999999);
+        //DAMPING = DAMPING * (1 + time/999999);
         for (var i = 0; i < particles.length; i++) {
           particles[i].attract(mouse.x, mouse.y);
           particles[i].integrate();
